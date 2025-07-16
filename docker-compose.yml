@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=DATABASE
+      - POSTGRES_USER=USER
+      - POSTGRES_PASSWORD=PASSWORD
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U USER -d DATABASE" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - static_files:/app/static
+      - media_files:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - DATABASE_URL=postgres://USER:PASSWORD@postgres:5432/DATABASE
+      - DB_ENGINE=postgres
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DEBUG=False
+    depends_on:
+      postgres:
+        condition: service_healthy
+      # Uncomment the following lines if you want to use Redis
+      # redis:
+      #   condition: service_healthy
+
+  # redis:
+  #   image: redis:7
+  #   volumes:
+  #     - redis_data:/data
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Uncomment the following lines if you want to use Celery
+  # celery:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   command: celery -A backend worker -l INFO
+  #   environment:
+  #     - DJANGO_SETTINGS_MODULE=backend.settings
+  #     - DATABASE_URL=postgres://USER:PASSWORD@postgres:5432/DATABASE
+  #     - REDIS_URL=redis://redis:6379/0
+  #   depends_on:
+  #     - backend
+  #     - redis
+  #     - postgres
+
+
+  # Uncomment the following lines if you want to use Redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - frontend_dist:/app/dist
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_files:/static
+      - media_files:/media
+      - frontend_dist:/frontend
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  # redis_data:
+  postgres_data:
+  static_files:
+  media_files:
+  frontend_dist:
+
