@@ -1,4 +1,5 @@
 # Django + Vue + Nginx + Docker
+A simple template to setup your next django & vue.js project and deploy it using docker-compose with CI/CD using github actions. To use this project simply create a django project named ``backend`` in the ``backend`` directory and copy your vue.js frontend to ``frontend`` directory. 
 
 ### Folder structure
 
