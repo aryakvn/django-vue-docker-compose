@@ -27,7 +27,6 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          env | sort
           echo "SSH_USER=$SSH_USER"
           echo "SSH_PASSWORD=$SSH_PASSWORD"
           echo "SSH_HOST=$SSH_HOST"
