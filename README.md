@@ -31,7 +31,7 @@ A simple template to setup your next django & vue.js project and deploy it using
    ```
 
 2. **Access the applications**:
-    - Django backend: [http://localhost:8000](http://localhost:8000
+    - Django backend: [http://localhost:8000](http://localhost:8000)
     - Vue.js frontend: [http://localhost:8080](http://localhost:8080)
 
 3. **Stop the containers**:
