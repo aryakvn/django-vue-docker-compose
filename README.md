@@ -101,6 +101,16 @@ environment:
     - REDIS_URL=redis://redis:6379/0
 ```
 
+### CI/CD - Github Actions
+Define the following secrets in your repository by navigating to ``Settings`` > ``Secrets and Variables`` > ``New Secret``.
+
+```bash
+SSH_HOST=
+SSH_USER=
+SSH_PASSWORD=
+DEPLOY_PATH=
+```
+
 ### Notes
 - Ensure Docker and Docker Compose are installed on your machine.
 - The Nginx configuration is set up to serve both the Django backend and Vue.js frontend
