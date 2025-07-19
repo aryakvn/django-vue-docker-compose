@@ -61,14 +61,14 @@ If you want to use Celery for background tasks, you can uncomment the ``celery``
 
 ```yaml
   celery:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: celery -A backend worker -l INFO
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings
-      - DATABASE_URL=postgres://USER:PASSWORD@postgres:5432/DATABASE
-      - REDIS_URL=redis://redis:6379/0
+    image: python:3.11
+    command: bash -c "pip install -r requirements.txt && celery -A backend worker -l INFO"
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+
     depends_on:
       - backend
       - redis
